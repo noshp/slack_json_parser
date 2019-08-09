@@ -40,22 +40,39 @@ class Parser:
 				input_dict = self.file_to_dict(self.data_dir+dir+"/"+file)
 				for object in input_dict:
 					try:
-						messages.append( {
+						messages.append( 
+						{
 						"user_id": object["user"],
 						"message": object["text"]
-
 						} )
-
 					
 					except:
 						continue
 		return messages
 
+	def get_reactions(self):
+		reactions = []
+		for dir in self.dirs:
+			for file in os.listdir(self.data_dir+dir):
+				input_dict = self.file_to_dict(self.data_dir+dir+"/"+file)
+				for object in input_dict:
+					try:
+						for reaction in object["reactions"]:
+							reactions.append(
+							{
+								"reaction" : reaction["name"],
+								"user_ids" : reaction["users"]
+							})
+
+					except Exception as e:
+						#print(e)
+						continue
+		return reactions
 
 
 
 if __name__ == "__main__":
 	bot = Parser()
 	with open("messages.json", 'w') as output:
-			output.write( json.dumps( bot.get_messages() ) )
+			output.write( json.dumps( bot.get_reactions() ) )
 			output.close()
