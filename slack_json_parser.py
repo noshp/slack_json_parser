@@ -11,8 +11,7 @@ class Parser:
 		self.user_data_file = json.load( open(self.data_dir+"/users.json") )
 
 		self.user_ids = self.get_user_id()
-		print(self.user_ids)
-
+		
 		self.dirs = [dir for dir in os.listdir(self.data_dir) if "." not in dir]
 
 
@@ -35,12 +34,28 @@ class Parser:
 
 
 	def get_messages(self):
-		for user in self.user_ids:
-			for dir in self.dirs:
-				for file in os.listdir(self.data_dir+dir):
-					input_dict = self.file_to_dict(self.data_dir+dir+"/"+file)
-					print(file)
+		messages = []
+		for dir in self.dirs:
+			for file in os.listdir(self.data_dir+dir):
+				input_dict = self.file_to_dict(self.data_dir+dir+"/"+file)
+				for object in input_dict:
+					try:
+						messages.append( {
+						"user_id": object["user"],
+						"message": object["text"]
+
+						} )
+
+					
+					except:
+						continue
+		return messages
+
+
+
 
 if __name__ == "__main__":
 	bot = Parser()
-	bot.get_messages()
+	with open("messages.json", 'w') as output:
+			output.write( json.dumps( bot.get_messages() ) )
+			output.close()
