@@ -1,6 +1,7 @@
 # Data
 data
 messages.json
+message_stats.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
